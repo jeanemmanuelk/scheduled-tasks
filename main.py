@@ -10,6 +10,7 @@ import datetime as dt
 import pandas as pd
 import random
 import smtplib
+import os
 
 # import os and use it to get the Github repository secrets
 MY_EMAIL = os.environ.get("MY_EMAIL")
