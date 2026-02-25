@@ -16,23 +16,34 @@ import os
 MY_EMAIL = os.environ.get("MY_EMAIL")
 MY_PASSWORD = os.environ.get("MY_PASSWORD")
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
+# 2. Check if today matches a birthday in the birthdays.csv
+bd_file = pd.read_csv("birthdays.csv").to_dict("records")
+now = dt.datetime.now()
+for bd in bd_file:
+    bd_month = int(bd["month"])
+    bd_day = int(bd["day"])
+    bd_name = bd["name"]
+    bd_email = bd["email"]
+    # 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
+    if bd_month == now.month and bd_day == now.day:
+        # 4. Send the letter generated in step 3 to that person's email address.
+        # selecting and interacting with a random letter
+        # folder_path = 'letter_templates'
+        # file_pattern = '*.txt'
+        # letters = glob.glob(os.path.join(folder_path, file_pattern)) #get all .txt letters files
+        # random_letter = random.choice(letters) # select random letter file
 
-data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
+        #method 2 to get a random file
+        file_path = f"letter_templates/letter_{random.randint(1,3)}.txt"
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+        # open and update the letter
+        with open(file_path, 'r') as f:
+            content = f.read() # get letter content as a list
+            content = content.replace('[NAME]',f'{bd_name}') #replace the name
+
+        # send the updated letter content to the person's email address
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+            connection.sendmail(from_addr=MY_EMAIL,to_addrs=bd_email,
+                                msg=f"Subject:Happy Birthday!\n\n{content}")
