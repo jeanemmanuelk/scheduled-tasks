@@ -1,1 +1,3 @@
-pandas
+Requests
+os
+twilio
