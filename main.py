@@ -2,9 +2,9 @@ import requests
 from twilio.rest import Client
 import os
 
-weather_api_key = os.environ.get("WEATHER_API_KEY")
-account_sid = os.environ.get("TWILIO_ACCOUNT_SID")
-auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
+weather_api_key = os.environ.get("OWM_API_KEY")
+account_sid = os.environ.get("ACCOUNT_SID")
+auth_token = os.environ.get("AUTH_TOKEN")
 
 params = {
     "lat":21.309919,
